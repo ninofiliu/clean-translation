@@ -1,10 +1,12 @@
 import Vue from 'vue';
 import App from './App.vue';
-import i18n from './i18n';
+import createI18n from './createI18n';
 
 Vue.config.productionTip = false;
 
-new Vue({
-  i18n,
-  render: (h) => h(App),
-}).$mount('#app');
+(async () => {
+  new Vue({
+    i18n: await createI18n(),
+    render: (h) => h(App),
+  }).$mount('#app');
+})();
