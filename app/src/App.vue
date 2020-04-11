@@ -1,3 +1,5 @@
 <template>
-  <div/>
+  <div>
+    {{ $t('hello') }}
+  </div>
 </template>
