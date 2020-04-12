@@ -10,7 +10,13 @@
         </tr>
         <tr v-for="key of keys" :key="key">
           <td>{{ key }}</td>
-          <td v-for="locale of locales" :key="locale">{{ messages[locale][key] }}</td>
+          <td
+            v-for="locale of locales"
+            :key="locale"
+            :class="{ modified: messages[locale][key] !== oldMessages[locale][key] }"
+          >
+            <textarea v-model="messages[locale][key]" cols="50"/>
+          </td>
         </tr>
       </table>
     </div>
@@ -23,6 +29,7 @@ export default {
   data() {
     return {
       messages: null,
+      oldMessages: null,
     };
   },
   computed: {
@@ -36,18 +43,23 @@ export default {
     },
   },
   async created() {
-    const resp = await fetch(langApiOrigin);
-    this.messages = await resp.json();
+    await this.load();
   },
   methods: {
     update(locale, key, value) {
       this.messages[locale][key] = value;
+    },
+    async load() {
+      const resp = await fetch(langApiOrigin);
+      this.messages = await resp.json();
+      this.oldMessages = JSON.parse(JSON.stringify(this.messages));
     },
     async save() {
       await fetch(langApiOrigin, {
         method: 'PUT',
         body: JSON.stringify(this.messages, null, 2),
       });
+      await this.load();
     },
   },
 };
@@ -60,5 +72,13 @@ table {
 td {
   border: 1px solid black;
   padding: .5em;
+}
+.modified {
+  background-color: #ddd;
+}
+textarea {
+  resize: none;
+  border: none;
+  background-color: transparent;
 }
 </style>
