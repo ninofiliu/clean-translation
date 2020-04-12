@@ -3,17 +3,16 @@
     <div v-if="! messages">Loading...</div>
     <div v-else>
       <button @click="save">Save</button>
-      <ul>
-        <li v-for="[locale, data] of Object.entries(messages)" :key="locale">
-          {{ locale }}
-          <ul>
-            <li v-for="[key, value] of Object.entries(data)" :key="key">
-              <span>{{ key }}</span>
-              <input :value="value" @input="(evt) => update(locale, key, evt.target.value)">
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <table>
+        <tr>
+          <td></td>
+          <td v-for="locale of locales" :key="locale">{{ locale }}</td>
+        </tr>
+        <tr v-for="key of keys" :key="key">
+          <td>{{ key }}</td>
+          <td v-for="locale of locales" :key="locale">{{ messages[locale][key] }}</td>
+        </tr>
+      </table>
     </div>
   </div>
 </template>
@@ -25,6 +24,16 @@ export default {
     return {
       messages: null,
     };
+  },
+  computed: {
+    locales() {
+      if (!this.messages) return [];
+      return Object.keys(this.messages);
+    },
+    keys() {
+      if (!this.locales) return [];
+      return Object.keys(this.messages[this.locales[0]]);
+    },
   },
   async created() {
     const resp = await fetch(langApiOrigin);
@@ -43,3 +52,13 @@ export default {
   },
 };
 </script>
+
+<style>
+table {
+  border-collapse: collapse;
+}
+td {
+  border: 1px solid black;
+  padding: .5em;
+}
+</style>
