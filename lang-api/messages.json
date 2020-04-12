@@ -1,8 +1,12 @@
 {
   "en": {
-    "hello": "Hello!"
+    "name": "Name",
+    "hello": "Hello  {name}!",
+    "apples": "No apples | One apple | {count} apples"
   },
   "fr": {
-    "hello": "Bonjour!"
+    "name": "Nom",
+    "hello": "Bonjour {name}!",
+    "apples": "Pas de pommes | Une pomme | {count} pommes"
   }
 }
